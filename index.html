@@ -27,17 +27,56 @@
 <div class="footer">TrendScope prototype · Live platform data integrations are a future development step.</div>
 </main>
 <script>
-const items=[
-{t:"AI video editing tools",p:"YouTube",c:"Content creation",d:"People researching faster ways to create and edit videos.",e:"Tutorial videos, editing services, template packs and tool referrals."},
-{t:"Best budget smartphones",p:"Google Search",c:"Affiliate marketing",d:"Comparison and buying queries can indicate commercial interest.",e:"Review videos, comparison articles and affiliate links."},
-{t:"Quick recipe videos",p:"Instagram",c:"Content creation",d:"Short visual formats can help creators reach food audiences.",e:"Sponsored content, recipe ebooks and cooking classes."},
-{t:"Printable planners",p:"Pinterest",c:"Digital products",d:"Planning and organization topics suit evergreen discovery.",e:"Printable downloads, template bundles and niche blog content."},
-{t:"Small business website setup",p:"Google Search",c:"Freelancing",d:"Searches for setup help may indicate demand for services.",e:"Website setup packages, maintenance and consulting."},
-{t:"Creator economy tips",p:"YouTube",c:"Online business",d:"Creators seek practical education about growing an audience.",e:"Workshops, consulting, guides and sponsorships."}
-];
+const API="https://trendscope-api.jameelbasha001.workers.dev";
+let liveItems=[], dataMode="loading", view="state";
 const $=id=>document.getElementById(id);
-function render(){let p=$("platform").value,c=$("category").value,q=$("search").value.toLowerCase();let list=items.filter(x=>(p==="All platforms"||x.p===p)&&(c==="All opportunities"||x.c===c)&&(x.t+" "+x.d+" "+x.e).toLowerCase().includes(q));$("cards").innerHTML=list.map(x=>'<article class="trend"><span class="tag">'+x.p+'</span><h4>'+x.t+'</h4><div class="muted">'+x.c+'</div><p>'+x.d+'</p><div class="earn"><b>Possible monetization:</b> '+x.e+'</div><a target="_blank" rel="noopener" href="https://trends.google.com/trends/explore?q='+encodeURIComponent(x.t)+'">Google Trends ↗</a><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+encodeURIComponent(x.t)+'">YouTube ↗</a></article>').join("")||'<p class="muted">No matching sample topics. Try another filter.</p>'}
+function opportunity(topic){
+ const t=topic.toLowerCase();
+ if(/buy|price|best|review|phone|laptop|product|deal|shop/.test(t)) return ["Affiliate marketing","Product comparisons, buyer guides and affiliate links."];
+ if(/job|resume|business|website|design|service|freelance/.test(t)) return ["Freelancing","Offer a related service, portfolio project or consulting."];
+ if(/recipe|food|fitness|travel|fashion|beauty|game|movie|music/.test(t)) return ["Content creation","Create useful videos, posts or guides; sponsorships may be possible."];
+ if(/course|learn|study|exam|language|skill|tutorial/.test(t)) return ["Digital products","Consider original guides, templates or learning materials."];
+ return ["Online business","Research audience needs before choosing a product or service."];
+}
+async function loadTrends(){
+ $("cards").innerHTML='<p class="muted">Loading current Google Trends data…</p>';
+ try{
+  const response=await fetch(API+"/api/trends?geo=IN");
+  if(!response.ok) throw new Error("API returned HTTP "+response.status);
+  const data=await response.json();
+  if(!data.ok) throw new Error(data.error||"Trend feed unavailable");
+  liveItems=data.trends.map(x=>{const idea=opportunity(x.topic);return {t:x.topic,p:"Google Search",c:idea[0],d:"Currently listed in Google Trends for India. Approximate traffic: "+(x.traffic||"Not supplied")+".",e:idea[1],date:x.publishedAt,source:x.source};});
+  dataMode="live";
+  $("location").textContent="Live feed connected · India country-level trends · Updated "+new Date(data.fetchedAt).toLocaleString()+". Tamil Nadu state-level data is not supplied by this feed.";
+  document.querySelector(".demo").textContent="LIVE GOOGLE TRENDS";
+  document.querySelector(".notice[data-disclaimer]")?.remove();
+  render();
+ }catch(err){
+  dataMode="error";
+  $("location").textContent="Live feed could not be loaded: "+err.message+". Showing clearly labelled example topics instead.";
+  render();
+ }
+}
+const samples=[
+{t:"AI video editing tools",p:"YouTube",c:"Content creation",d:"Example topic only; not a measured trend.",e:"Tutorial videos, editing services, template packs and tool referrals."},
+{t:"Best budget smartphones",p:"Google Search",c:"Affiliate marketing",d:"Example topic only; not a measured trend.",e:"Review videos, comparison articles and affiliate links."},
+{t:"Quick recipe videos",p:"Instagram",c:"Content creation",d:"Example topic only; not a measured trend.",e:"Sponsored content, recipe ebooks and cooking classes."},
+{t:"Printable planners",p:"Pinterest",c:"Digital products",d:"Example topic only; not a measured trend.",e:"Printable downloads, template bundles and niche blog content."},
+{t:"Small business website setup",p:"Google Search",c:"Freelancing",d:"Example topic only; not a measured trend.",e:"Website setup packages, maintenance and consulting."},
+{t:"Creator economy tips",p:"YouTube",c:"Online business",d:"Example topic only; not a measured trend.",e:"Workshops, consulting, guides and sponsorships."}
+];
+function render(){
+ const sourceItems=dataMode==="live"?liveItems:samples;
+ const p=$("platform").value,c=$("category").value,q=$("search").value.toLowerCase();
+ const list=sourceItems.filter(x=>(p==="All platforms"||x.p===p)&&(c==="All opportunities"||x.c===c)&&(x.t+" "+x.d+" "+x.e).toLowerCase().includes(q));
+ $("cards").innerHTML=list.map(x=>'<article class="trend"><span class="tag">'+x.p+'</span><h4>'+x.t+'</h4><div class="muted">'+x.c+'</div><p>'+x.d+'</p><div class="earn"><b>Possible monetization idea:</b> '+x.e+'<br><small>Idea only; earnings are not guaranteed.</small></div><a target="_blank" rel="noopener" href="https://trends.google.com/trends/explore?geo=IN&q='+encodeURIComponent(x.t)+'">Investigate in Google Trends ↗</a><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+encodeURIComponent(x.t)+'">Search YouTube ↗</a></article>').join("")||'<p class="muted">No matching topics. Try another filter.</p>';
+}
 ["platform","category","search","period"].forEach(id=>$(id).addEventListener("input",render));
-document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));b.classList.add("active");let v=b.dataset.view;if(v==="state"){$("region").value="Tamil Nadu";$("region").disabled=false;$("location").textContent="Showing the Tamil Nadu view."}else if(v==="country"){$("region").value="All regions";$("region").disabled=true;$("location").textContent="Showing the India-wide view."}else{$("region").disabled=true;$("location").textContent="Showing the worldwide view."}}));
-render();
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{
+ document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));b.classList.add("active");view=b.dataset.view;
+ if(view==="state"){$("region").value="Tamil Nadu";$("region").disabled=false;$("location").textContent="Tamil Nadu selected. The current Google Trends feed only provides India-wide results, not Tamil Nadu state-level results."}
+ else if(view==="country"){$("region").value="All regions";$("region").disabled=true;$("location").textContent="India country-wide Google Trends feed."}
+ else{$("region").disabled=true;$("location").textContent="A single worldwide aggregate is not available from this feed. Choose a country to see its trends."}
+}));
+loadTrends();
 </script></body></html>

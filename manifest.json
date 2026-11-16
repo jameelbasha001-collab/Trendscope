@@ -1,0 +1,9 @@
+{
+  "name": "TrendScope",
+  "short_name": "TrendScope",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#101827",
+  "description": "Discover search trends and monetization opportunities."
+}

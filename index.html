@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827"><title>TrendScope</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#142137;--line:#2b3d56;--text:#edf4ff;--muted:#a5b4ca;--mint:#78e2c4;--blue:#9bbaff}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#0b1220,#14243b);color:var(--text);font:15px system-ui,sans-serif}header,main{max-width:900px;margin:auto;padding:20px}header{display:flex;align-items:center;gap:12px}.logo{background:linear-gradient(135deg,var(--mint),var(--blue));color:#081322;font-weight:900;border-radius:13px;padding:12px;font-size:22px}h1{font-size:22px;margin:0}header p{margin:3px 0;color:var(--muted);font-size:12px}.pill{margin-left:auto;border:1px solid #47614f;color:#baf4d1;border-radius:20px;padding:5px 9px;font-size:11px}.hero,.panel,.trend{background:#142137;border:1px solid var(--line);border-radius:17px;padding:17px;margin:12px 0}.hero{background:linear-gradient(120deg,#1b4650,#243657)}.eyebrow{color:var(--mint);font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase}.hero h2{font-size:26px;margin:8px 0}.hero p,.muted{color:var(--muted);line-height:1.5}.tabs,.filters,.cards{display:grid;gap:9px}.tabs{grid-template-columns:repeat(3,1fr)}button,select,input{font:inherit}button{background:#192b43;color:var(--muted);border:1px solid var(--line);border-radius:11px;padding:11px 7px;font-weight:700}.tabs button.active{border-color:var(--mint);color:var(--mint);background:#1b3b43}.filters{grid-template-columns:1fr 1fr}.field label{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}.field select,.field input{width:100%;padding:11px;background:#0b1728;color:var(--text);border:1px solid var(--line);border-radius:10px}.full{grid-column:1/-1}.notice{background:#30291b;color:#f3dca8;border:1px solid #67562f;border-radius:12px;padding:12px;font-size:12px;line-height:1.5;margin:12px 0}.heading{display:flex;justify-content:space-between;align-items:center;margin:22px 0 8px}.heading h3{margin:0}.demo{font-size:10px;color:#f3dca8;border:1px solid #67562f;border-radius:20px;padding:4px 8px}.cards{grid-template-columns:1fr 1fr}.trend h4{margin:10px 0 5px;font-size:16px}.tag{display:inline-block;background:#263a57;color:#dceaff;padding:5px 8px;border-radius:20px;font-size:11px}.trend p{color:var(--muted);font-size:13px;line-height:1.45}.earn{border-top:1px solid var(--line);padding-top:9px;font-size:12px;line-height:1.5}.trend a{display:inline-block;margin:10px 8px 0 0;color:var(--blue);font-size:12px;text-decoration:none}.footer{text-align:center;color:#8192aa;font-size:11px;padding:25px}@media(max-width:560px){.cards{grid-template-columns:1fr}.hero h2{font-size:23px}}
+</style></head>
+<body>
+<header><div class="logo">T</div><div><h1>TrendScope</h1><p>Discover demand. Find opportunities.</p></div><span class="pill">FREE-FIRST</span></header>
+<main>
+<section class="hero"><div class="eyebrow">Trends intelligence</div><h2>Find what people want.<br>Discover ways to earn.</h2><p>Explore search interest and platform topics by location, then investigate practical monetization ideas.</p></section>
+<div class="tabs"><button class="active" data-view="state">📍 Tamil Nadu</button><button data-view="country">🇮🇳 India</button><button data-view="world">🌍 World</button></div>
+<section class="panel filters">
+<div class="field"><label>COUNTRY</label><select id="country"><option>India</option></select></div>
+<div class="field"><label>STATE / REGION</label><select id="region"><option>Tamil Nadu</option><option>All regions</option></select></div>
+<div class="field"><label>PLATFORM</label><select id="platform"><option>All platforms</option><option>Google Search</option><option>YouTube</option><option>Instagram</option><option>Facebook</option><option>Pinterest</option><option>X</option></select></div>
+<div class="field"><label>MONEY-MAKING CATEGORY</label><select id="category"><option>All opportunities</option><option>Content creation</option><option>Affiliate marketing</option><option>Blogging & SEO</option><option>Selling products</option><option>Digital products</option><option>Freelancing</option><option>Online business</option></select></div>
+<div class="field"><label>TIME PERIOD</label><select id="period"><option>Past 24 hours</option><option>Past 7 days</option><option>Past 30 days</option></select></div>
+<div class="field"><label>SEARCH TOPICS</label><input id="search" placeholder="e.g. AI tools, recipes"></div>
+</section>
+<div class="notice" id="location">Showing the Tamil Nadu view. Change the country or region to explore another market.</div>
+<div class="heading"><h3>Opportunity radar</h3><span class="demo">SAMPLE DATA</span></div>
+<div class="notice">These cards are examples only, not live rankings, search volumes or verified earnings. Use the links to investigate current demand.</div>
+<section class="cards" id="cards"></section>
+<div class="footer">TrendScope prototype · Live platform data integrations are a future development step.</div>
+</main>
+<script>
+const items=[
+{t:"AI video editing tools",p:"YouTube",c:"Content creation",d:"People researching faster ways to create and edit videos.",e:"Tutorial videos, editing services, template packs and tool referrals."},
+{t:"Best budget smartphones",p:"Google Search",c:"Affiliate marketing",d:"Comparison and buying queries can indicate commercial interest.",e:"Review videos, comparison articles and affiliate links."},
+{t:"Quick recipe videos",p:"Instagram",c:"Content creation",d:"Short visual formats can help creators reach food audiences.",e:"Sponsored content, recipe ebooks and cooking classes."},
+{t:"Printable planners",p:"Pinterest",c:"Digital products",d:"Planning and organization topics suit evergreen discovery.",e:"Printable downloads, template bundles and niche blog content."},
+{t:"Small business website setup",p:"Google Search",c:"Freelancing",d:"Searches for setup help may indicate demand for services.",e:"Website setup packages, maintenance and consulting."},
+{t:"Creator economy tips",p:"YouTube",c:"Online business",d:"Creators seek practical education about growing an audience.",e:"Workshops, consulting, guides and sponsorships."}
+];
+const $=id=>document.getElementById(id);
+function render(){let p=$("platform").value,c=$("category").value,q=$("search").value.toLowerCase();let list=items.filter(x=>(p==="All platforms"||x.p===p)&&(c==="All opportunities"||x.c===c)&&(x.t+" "+x.d+" "+x.e).toLowerCase().includes(q));$("cards").innerHTML=list.map(x=>'<article class="trend"><span class="tag">'+x.p+'</span><h4>'+x.t+'</h4><div class="muted">'+x.c+'</div><p>'+x.d+'</p><div class="earn"><b>Possible monetization:</b> '+x.e+'</div><a target="_blank" rel="noopener" href="https://trends.google.com/trends/explore?q='+encodeURIComponent(x.t)+'">Google Trends ↗</a><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+encodeURIComponent(x.t)+'">YouTube ↗</a></article>').join("")||'<p class="muted">No matching sample topics. Try another filter.</p>'}
+["platform","category","search","period"].forEach(id=>$(id).addEventListener("input",render));
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));b.classList.add("active");let v=b.dataset.view;if(v==="state"){$("region").value="Tamil Nadu";$("region").disabled=false;$("location").textContent="Showing the Tamil Nadu view."}else if(v==="country"){$("region").value="All regions";$("region").disabled=true;$("location").textContent="Showing the India-wide view."}else{$("region").disabled=true;$("location").textContent="Showing the worldwide view."}}));
+render();
+</script></body></html>
